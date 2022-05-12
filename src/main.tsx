@@ -7,6 +7,7 @@ import {
 } from "@apollo/client";
 import './index.css'
 import { Button } from './components/Button/Button';
+import { Searcher } from './components/Searcher/Searcher';
 
 const client = new ApolloClient({
   uri: 'https://countries.trevorblades.com/',
@@ -30,6 +31,7 @@ const run = () => {
         </h2>
         <Button text='Button' onClick={() => { console.log('click in default button') }} />
         <Button text='Button' stateButton='ACTIVE' onClick={() => { console.log('active button') }} />
+        <Searcher />
 
       </ApolloProvider>
     </React.StrictMode>
