@@ -1,3 +1,4 @@
+/* spell-checker: disable */
 # Explicacion
 
 ## Mejoras en la UX/UI
@@ -13,6 +14,9 @@
 - Uso de TS para tipado y mejorar el autocompletado
 - Se configuro commitlint con husky
 - Se configuro el los labes de github similares a los types de comventional-commits
+- Se cambio apollo-boost y @apollo/react-hooks a @apollo/client, por que apollo/client es una libreria mas moderna, tambien trae el provider y el client juntas
+- Se configuro Codegen para generar los schemas automaticamente, tengo un [tutorial](https://blog.jimynicanor.com/posts/angular-graphql) sobre eso pero con angular, es lo mismo para react
+- Se configuro eslint con las reglas de default, no se configuro prettier ya que yo escribire el codigo limpio
 
 ## Arquitecture
 ### Para proyectos pequeños

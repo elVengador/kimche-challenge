@@ -1,3 +1,5 @@
+/* spell-checker: disable */
+
 # Desafío para Software Engineers
 
 Nombre postulante: Jimy Nicanor Quintanilla Ceron

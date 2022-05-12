@@ -1,0 +1,5 @@
+generates:
+  ./src/schemas.ts:   # <--- path where generate schemas
+    schema: https://countries.trevorblades.com/ # <--- endpoint
+    plugins:
+      - typescript        # <--- plugin to generate ts
