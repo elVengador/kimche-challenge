@@ -11,7 +11,6 @@ export interface CountriesSet {
 
 interface CountriesSetProps {
     countriesSet: CountriesSet
-    searchValue: string
 }
 
 const CountriesSetStyled = styled.div`
@@ -38,21 +37,18 @@ const CountriesStyled = styled.div`
     }
 `
 
-export const CountriesSet = ({ countriesSet, searchValue }: CountriesSetProps) => {
+export const CountriesSet = ({ countriesSet }: CountriesSetProps) => {
 
-    const filterCountries = (searchText: string, countries: Country[]) => {
-        return countries.filter(cur => cur.name.toLowerCase().includes(searchText.toLowerCase()))
-    }
-    const countries = filterCountries(searchValue, countriesSet.countries)
 
-    if (!countries.length) { return null }
+
+    if (!countriesSet.countries.length) { return null }
 
     return (
         <CountriesSetStyled>
             <CountriesSetTitleStyled>{countriesSet.title}</CountriesSetTitleStyled>
             <CountriesStyled>
                 {
-                    countries.map((cur, idx) => <CountryCard key={idx} country={cur} />)
+                    countriesSet.countries.map((cur, idx) => <CountryCard key={idx} country={cur} />)
                 }
             </CountriesStyled>
         </CountriesSetStyled>

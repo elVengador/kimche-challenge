@@ -76,6 +76,10 @@ export const CountrySearch = () => {
         setCountriesSet(result)
     }, [searchValue, typeSearch, data])
 
+    const filterCountries = (searchText: string, countries: Country[]) => {
+        return countries.filter(cur => cur.name.toLowerCase().includes(searchText.toLowerCase()))
+    }
+
     if (error) {
         // here we can manage error
         // - register error in our logs
@@ -94,7 +98,13 @@ export const CountrySearch = () => {
                 loading && <div>Loading <FontAwesomeIcon icon={faSpinner} spin={true} /></div>
             }
             {
-                !loading && countriesSets.map((cur, idx) => <CountriesSet key={idx} countriesSet={cur} searchValue={searchValue} />)
+                !loading && countriesSets.map((cur, idx) => <CountriesSet
+                    key={idx}
+                    countriesSet={{
+                        title: cur.title,
+                        countries: filterCountries(searchValue, cur.countries)
+                    }}
+                />)
             }
         </CountrySearchStyled>
     )
