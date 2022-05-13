@@ -17,6 +17,7 @@ const InfoStyled = styled.ul`
     color: ${colors.foreground};
     font-size: ${fonts.fontMD};
     font-weight: ${fonts.fontWeight300};
+    list-style: none;
 `
 interface CountryCardProps {
     country: Country
