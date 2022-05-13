@@ -48,6 +48,6 @@ interface SearcherProps {
 export const Searcher = ({ value, onChange }: SearcherProps) => {
     return <WrapperStyled>
         <IconStyled><FontAwesomeIcon icon={faSearch} /></IconStyled>
-        <SearcherStyled value={value} onChange={(e) => onChange(e.currentTarget.value)} />
+        <SearcherStyled value={value} onChange={(e) => onChange(e.currentTarget.value)} placeholder="Search a country by country or language" />
     </WrapperStyled>
 }
