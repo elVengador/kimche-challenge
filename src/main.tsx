@@ -48,7 +48,7 @@ const WrapperSearcher = () => {
   const [value, setValue] = useState('')
   return <>
     <h2>{value}</h2>
-    <Searcher value={value} setValue={(newValue: string) => setValue(newValue)} />
+    <Searcher value={value} onChange={(newValue: string) => setValue(newValue)} />
   </>
 }
 
