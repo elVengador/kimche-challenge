@@ -19,13 +19,18 @@ const InfoStyled = styled.ul`
     font-weight: ${fonts.fontWeight300};
     list-style: none;
 `
+
+const InfoName = styled.span`
+    font-weight: ${fonts.fontWeight600};
+`
 interface CountryCardProps {
     country: Country
 }
 
 export const CountryCard = ({ country }: CountryCardProps) => {
-    const { name, emoji, code, languages, capital, continent, phone, currency } = country
+    const unknownWord = '??'
 
+    const { name, emoji, code, languages, capital, continent, phone, currency } = country
 
     const getLanguagesText = () => languages.map(cur => `${cur.name} (${cur.native})`).join(', ')
 
@@ -35,10 +40,10 @@ export const CountryCard = ({ country }: CountryCardProps) => {
             <>
                 <TitleStyled>{emoji} {name} [{code}]</TitleStyled>
                 <InfoStyled>
-                    <li>Idiomas: {getLanguagesText()}</li>
-                    <li>Capital: {capital}</li>
-                    <li>Continente: {continent.name}</li>
-                    <li><FontAwesomeIcon icon={faPhone} /> +{phone} <FontAwesomeIcon icon={faCoins} /> {currency}</li>
+                    <li><InfoName>Idiomas:</InfoName> {getLanguagesText() || unknownWord}</li>
+                    <li><InfoName>Capital:</InfoName> {capital || unknownWord}</li>
+                    <li><InfoName>Continente:</InfoName> {continent.name || unknownWord}</li>
+                    <li><FontAwesomeIcon icon={faPhone} /> +{phone || unknownWord} <FontAwesomeIcon icon={faCoins} /> {currency || unknownWord}</li>
                 </InfoStyled>
             </>
         </Card>
