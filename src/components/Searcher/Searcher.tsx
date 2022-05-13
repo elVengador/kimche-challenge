@@ -42,12 +42,12 @@ const IconStyled = styled.div`
 // we set our searcher full with because we manage the size from parent component
 interface SearcherProps {
     value: string,
-    setValue: (newValue: string) => void
+    onChange: (newValue: string) => void
 }
 
-export const Searcher = ({ value, setValue }: SearcherProps) => {
+export const Searcher = ({ value, onChange }: SearcherProps) => {
     return <WrapperStyled>
         <IconStyled><FontAwesomeIcon icon={faSearch} /></IconStyled>
-        <SearcherStyled value={value} onChange={(e) => setValue(e.currentTarget.value)} />
+        <SearcherStyled value={value} onChange={(e) => onChange(e.currentTarget.value)} />
     </WrapperStyled>
 }
