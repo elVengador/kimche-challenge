@@ -1,43 +1,18 @@
-import { type } from '@testing-library/user-event/dist/types/setup/directApi'
 import React, { useEffect, useState } from 'react'
+import { useQuery } from '@apollo/client'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from 'styled-components'
 import { Button } from '../components/Button/Button'
-import { CountryCard } from '../components/CoutryCard/CountryCard'
 import { Searcher } from '../components/Searcher/Searcher'
+import { GET_COUNTRIES } from '../graphql/queries/getCountries.query'
 import { colors, fonts } from '../properties.styles'
 import { Country } from '../schemas'
+import { CountriesSet } from '../components/CountriesSet/CountriesSet'
 
 type TypeSearch = 'CONTINENT' | 'LANGUAGE'
 
-const myCountry: Country = {
-    "code": "CL",
-    "name": "Chile",
-    "native": "Chile",
-    "phone": "56",
-    "emoji": "🇨🇱",
-    "emojiU": "U+1F1E8 U+1F1F1",
-    "continent": {
-        "code": "SA",
-        "name": "South America",
-        "countries": []
-    },
-    "capital": "Santiago",
-    "currency": "CLF,CLP",
-    "languages": [
-        {
-            "code": "es",
-            "name": "Spanish",
-            "native": "Español",
-            "rtl": false
-        }
-    ],
-    "states": []
-}
 
-interface CountriesSet {
-    title: string,
-    countries: Country[]
-}
 
 const CountrySearchStyled = styled.div`
     max-width: 1000px;
@@ -61,67 +36,50 @@ const OptionsStyled = styled.div`
     column-gap: 30px;
 `
 
-const CountriesSetStyled = styled.div`
-    padding: 20px 0px;
-`
-const CountriesSetTitleStyled = styled.h2`
-    padding: 30px 0px;
-    color: ${colors.foreground};
-    font-size: ${fonts.fontLG};
-    font-weight: ${fonts.fontWeight600};
-`
-
-const CountriesStyled = styled.div`
-    display: grid;
-    grid-template-columns: 1fr;
-    column-gap: 50px;
-    row-gap: 30px;
-    @media (min-width: 600px) {
-        grid-template-columns: 1fr 1fr;
-    }
-    @media (min-width: 900px) {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-`
-
 export const CountrySearch = () => {
-
-    const countriesSets: CountriesSet[] = [
-        {
-            title: 'South America',
-            countries: [myCountry, myCountry, myCountry, myCountry, myCountry, myCountry, myCountry]
-        },
-        {
-            title: 'South America',
-            countries: [myCountry]
-        },
-        {
-            title: 'South America',
-            countries: [myCountry]
-        },
-        {
-            title: 'South America',
-            countries: [myCountry]
-        },
-        {
-            title: 'South America',
-            countries: [myCountry]
-        },
-    ]
 
     const [searchValue, setSearchValue] = useState('')
     const [typeSearch, setTypeSearch] = useState<TypeSearch>('CONTINENT')
+    const [countriesSets, setCountriesSet] = useState<CountriesSet[]>([])
+    const { loading, error, data } = useQuery<{ countries: Country[] }>(GET_COUNTRIES);
 
-    // useEffect(() => {
+    const getPreviousGroup = (groups: CountriesSet[], keyValue: string): CountriesSet => {
+        const foundGroup = groups.find(cur => cur.title === keyValue)
+        return foundGroup ? foundGroup : { title: keyValue, countries: [] }
+    }
+    const getKeyValue = (country: Country, groupBy: TypeSearch): string => {
+        if (groupBy === 'CONTINENT') { return country.continent.name }
+        if (groupBy === 'LANGUAGE') { return country.languages[0]?.name || '' }
+        return ''
+    }
 
-    // }, [searchValue, typeSearch])
+    const getFilteredCountriesSet = (groups: CountriesSet[], keyValue: string) => groups.filter(cur => cur.title !== keyValue)
 
-    const CountriesSet = ({ countriesSet }: { countriesSet: CountriesSet }) => <CountriesSetStyled>
-        <CountriesSetTitleStyled>{countriesSet.title}</CountriesSetTitleStyled>
-        <CountriesStyled>
-            {countriesSet.countries.map((cur, idx) => <CountryCard key={idx} country={cur} />)}
-        </CountriesStyled>
-    </CountriesSetStyled>
+    const countriesToCountriesSets = (countries: Country[], groupBy: TypeSearch): CountriesSet[] => {
+        const result = countries.reduce((acu: CountriesSet[], cur: Country) => {
+            const keyValue = getKeyValue(cur, groupBy)
+            if (!keyValue) { return acu }
+
+            const previousGroup = getPreviousGroup(acu, keyValue)
+
+            previousGroup.countries.push(cur)
+            const filteredCountriesSet = getFilteredCountriesSet(acu, keyValue)
+            return [...filteredCountriesSet, { ...previousGroup }]
+        }, [])
+        return result
+    }
+
+    useEffect(() => {
+        if (!data) { return }
+
+        const result = countriesToCountriesSets(data.countries, typeSearch)
+        setCountriesSet(result)
+    }, [searchValue, typeSearch, data])
+
+    if (error) {
+        // here we can manage error
+        // - register error in our logs
+    }
 
     return (
         <CountrySearchStyled>
@@ -131,8 +89,12 @@ export const CountrySearch = () => {
                 <Button text='Continent' onClick={() => setTypeSearch('CONTINENT')} stateButton={typeSearch === 'CONTINENT' ? 'ACTIVE' : 'DEFAULT'} />
                 <Button text='Language' onClick={() => setTypeSearch('LANGUAGE')} stateButton={typeSearch === 'LANGUAGE' ? 'ACTIVE' : 'DEFAULT'} />
             </OptionsStyled>
+            {error && <div>Ups!, Some error happen</div>}
             {
-                countriesSets.map((cur, idx) => <CountriesSet key={idx} countriesSet={cur} />)
+                loading && <div>Loading <FontAwesomeIcon icon={faSpinner} spin={true} /></div>
+            }
+            {
+                !loading && countriesSets.map((cur, idx) => <CountriesSet key={idx} countriesSet={cur} searchValue={searchValue} />)
             }
         </CountrySearchStyled>
     )

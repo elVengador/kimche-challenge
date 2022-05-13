@@ -19,7 +19,7 @@
 - Se configuro eslint con las reglas de default, no se configuro prettier ya que yo escribire el codigo limpio
 - Se agrego fontawesome para los iconos
 
-## Arquitecture
+## Arquitectura
 ### Para proyectos pequeños
 Se crea una carpeta components, hooks, pages
 ### Para proyectos grandes se usa arquitectura limpia
@@ -35,4 +35,9 @@ recordando arquitectura limpia pide como minimo 3 capas (dominio, aplicacion, in
 Ahora si queremos cambiar de framework solo se toca la capa de presentacion, la idea es que sea mantenible y escalable, el arbol de nuestros archivos deve crecer en anchura no en profundidad.
 
 
-    
+## Sobre las peticiones
+Se queria hacer una consulta cada ves que se escribia en el buscador o cuando seleccionaba el tipo de busqueda (Continent or Language), pero en la Api de graphql no existia la consulta con los filtros necesarios.
+Entonces se obtiene todos los paises al iniciar la aplicacion y cada ves que se escribe en el buscador o se cambia el tipo de busqueda se aplica un filtro a los paises.
+
+## Resultado
+![preview](imgs/country-search-preview.png)
